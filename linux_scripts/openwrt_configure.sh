@@ -5,11 +5,7 @@
 # Configuration script for OpenWrt. Run as root. Install bash before running script.
 
 # Get needed scripts
-wget -O 'linux_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/scripts/stable/linux_scripts/linux_scripts.sh'
-wget -O 'linux_install_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/scripts/stable/linux_scripts/linux_install_scripts.sh'
-wget -O 'openwrt_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/scripts/stable/linux_scripts/openwrt_scripts.sh'
-wget -O 'bash_config_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/scripts/stable/linux_scripts/bash_config_scripts.sh'
-wget -O 'ssh_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/scripts/stable/linux_scripts/ssh_scripts.sh'
+wget -O 'openwrt_scripts.sh' 'https://raw.githubusercontent.com/MatthewDavidMiller/Router-Configuration/stable/linux_scripts/openwrt_scripts.sh'
 
 # Default variables
 user_name='matthew'
@@ -23,11 +19,7 @@ install_packages_response='y'
 #read -r -p "Do you want to install the packages? [y/N] " install_packages_response
 
 # Source functions
-source linux_scripts.sh
-source linux_install_scripts.sh
 source openwrt_scripts.sh
-source bash_config_scripts.sh
-source ssh_scripts.sh
 
 # Call functions
 create_user "${user_name}"
