@@ -124,6 +124,9 @@ config interface 'lan'
 config device 'lan_dev'
         option name 'eth0.1'
 
+config device 'wan_dev'
+        option name 'eth0.2'
+
 config interface 'wan'
         option ifname 'eth0.2'
         option proto 'static'
@@ -134,37 +137,11 @@ config interface 'wan'
         list dns '8.8.8.8'
         list dns '8.8.4.4'
 
-config device 'wan_dev'
-        option name 'eth0.2'
-
 config interface 'wan6'
         option ifname 'eth0.2'
         option proto 'dhcpv6'
         option reqaddress 'try'
         option reqprefix 'auto'
-
-config switch
-        option name 'switch0'
-        option reset '1'
-        option enable_vlan '1'
-
-config switch_vlan
-        option device 'switch0'
-        option vlan '1'
-        option vid '1'
-        option ports '4 3 2 1 0t'
-
-config switch_vlan
-        option device 'switch0'
-        option vlan '10'
-        option vid '10'
-        option ports '3t 2t 0t'
-
-config switch_vlan
-        option device 'switch0'
-        option vlan '2'
-        option vid '2'
-        option ports '5 0t'
 
 config interface 'vlan_1'
         option proto 'static'
@@ -187,27 +164,40 @@ config interface 'Vlan_10'
         list dns '8.8.8.8'
         list dns '8.8.4.4'
 
-config interface 'Vlan_20'
-        option proto 'static'
-        option ifname 'eth0.20'
-        option ipaddr '10.1.20.1'
-        option netmask '255.255.255.0'
-        option type 'bridge'
-        list dns '1.1.1.1'
-        list dns '8.8.8.8'
-        list dns '8.8.4.4'
+config switch
+        option name 'switch0'
+        option reset '1'
+        option enable_vlan '1'
 
 config switch_vlan
         option device 'switch0'
-        option vlan '11'
-        option vid '20'
-        option ports '3t 2t 0t'
+        option vlan '1'
+        option vid '1'
+        option ports '0t 1 2t 3t 4'
+
+config switch_vlan
+        option device 'switch0'
+        option vlan '10'
+        option vid '10'
+        option ports '0t 2t 3'
+
+config switch_vlan
+        option device 'switch0'
+        option vlan '2'
+        option vid '2'
+        option ports '0t 5'
 
 config switch_vlan
         option device 'switch0'
         option vlan '12'
-        option ports '3t 0t'
         option vid '50'
+        option ports '0t 3t'
+
+config switch_vlan
+        option device 'switch0'
+        option vlan '13'
+        option ports '0t 2'
+        option vid '400'
 
 EOF
 }
@@ -265,10 +255,10 @@ config domain
         option ip '10.1.10.4'
 
 config host
-        option name 'MaryPrinter'
+        option name 'mary-printer'
         option dns '1'
         option mac '64:51:06:71:BC:07'
-        option ip '10.1.20.213'
+        option ip '10.1.1.213'
 
 config domain
         option name 'matt-pihole'
@@ -287,13 +277,13 @@ config domain
         option ip '10.1.1.201'
 
 config host
-        option name 'MattSwitch'
+        option name 'matt-switch'
         option dns '1'
         option mac 'B0:4E:26:97:E9:66'
         option ip '10.1.10.206'
 
 config host
-        option name 'TimSwitch'
+        option name 'tim-switch'
         option dns '1'
         option mac '68:FF:7B:0B:22:C9'
         option ip '10.1.1.201'
@@ -307,7 +297,7 @@ config dhcp 'Vlan_10'
 
 config domain
         option name 'mary-printer'
-        option ip '10.1.20.213'
+        option ip '10.1.1.213'
 
 config host
         option name 'DavidRoku'
@@ -432,27 +422,6 @@ config wifi-iface 'wifinet3'
         option hidden '1'
         option disabled '1'
 
-config wifi-iface 'wifinet4'
-        option device 'radio1'
-        option mode 'ap'
-        option ssid "${ssid4_name}"
-        option network 'Vlan_20'
-        option encryption 'psk2+ccmp'
-        option key "${ssid4_password}"
-        option wpa_disable_eapol_key_retries '1'
-        option hidden '1'
-        option disabled '1'
-
-config wifi-iface 'wifinet5'
-        option device 'radio0'
-        option mode 'ap'
-        option ssid "${ssid4_name}"
-        option network 'Vlan_20'
-        option encryption 'psk2+ccmp'
-        option key "${ssid4_password}"
-        option wpa_disable_eapol_key_retries '1'
-        option hidden '1'
-        option disabled '1'
 EOF
 }
 
@@ -462,14 +431,6 @@ function openwrt_configure_firewall() {
 config rule
         option src 'vlan_1'
         option name 'allow guests access to dns'
-        option dest 'vlan_10'
-        option dest_ip '10.1.10.5'
-        option target 'ACCEPT'
-        option proto 'all'
-
-config rule
-        option src 'vlan_20'
-        option name 'allow iot access to dns'
         option dest 'vlan_10'
         option dest_ip '10.1.10.5'
         option target 'ACCEPT'
@@ -555,17 +516,6 @@ config zone
         option input 'ACCEPT'
         option forward 'ACCEPT'
 
-config zone
-        option name 'vlan_20'
-        option output 'ACCEPT'
-        option network 'Vlan_20'
-        option forward 'ACCEPT'
-        option input 'ACCEPT'
-
-config forwarding
-        option dest 'wan'
-        option src 'vlan_20'
-
 config rule
         option src 'wan'
         option name 'block rfc 1918'
@@ -578,16 +528,8 @@ config forwarding
         option src 'vlan_10'
 
 config forwarding
-        option dest 'vlan_20'
-        option src 'vlan_10'
-
-config forwarding
         option dest 'wan'
         option src 'vlan_10'
-
-config forwarding
-        option dest 'vlan_20'
-        option src 'lan'
 
 config forwarding
         option dest 'wan'
