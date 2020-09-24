@@ -44,4 +44,5 @@ openwrt_configure_upnp
 openwrt_configure_sysupgrade
 configure_dropbear_openwrt
 configure_ssh
+disable_dns
 remove_openwrt_packages
