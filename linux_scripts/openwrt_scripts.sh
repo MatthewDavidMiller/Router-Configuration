@@ -9,7 +9,7 @@ function install_openwrt_packages() {
         # Updates package lists
         opkg update
         # Installs packages
-        opkg install luci-app-upnp ipset luci-ssl bash coreutils openssh-keygen python3
+        opkg install luci-app-upnp luci-ssl bash coreutils openssh-keygen python3
 }
 
 function update_openwrt_packages() {
