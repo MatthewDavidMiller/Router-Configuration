@@ -1,0 +1,22 @@
+config dnsmasq
+	option domainneeded '1'
+	option localise_queries '1'
+	option rebind_protection '1'
+	option rebind_localhost '1'
+	option local '/lan/'
+	option expandhosts '1'
+	option authoritative '1'
+	option readethers '1'
+	option leasefile '/tmp/dhcp.leases'
+	option localservice '1'
+	option domain 'miller.lan'
+	list server '{{ dns_server_ip }}'
+	option port '53'
+	option noresolv '1'
+	option localuse '1'
+	list notinterface 'wan'
+	list notinterface 'wan6'
+
+{{ config_dhcp }}
+
+{{ config_host }}

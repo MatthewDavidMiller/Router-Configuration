@@ -1,0 +1,83 @@
+# Credits
+# https://techviewleo.com/list-of-ansible-os-family-distributions-facts/
+
+---
+- name: Restrict luci access
+  ansible.builtin.shell:
+    cmd: |
+      uci set uhttpd.main.listen_http="{{ ip_address }}":80
+      uci set uhttpd.main.listen_https="{{ ip_address }}":443
+      uci set uhttpd.main.redirect_https='1'
+      uci commit
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Disable DNS
+  ansible.builtin.shell:
+    cmd: |
+      uci set dhcp.@dnsmasq[0].port="0"
+      uci commit dhcp
+      '/etc/init.d/dnsmasq' restart
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure DHCP
+  ansible.builtin.template:
+    src: dhcp.j2
+    dest: /etc/config/dhcp
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure Dropbear
+  ansible.builtin.template:
+    src: dropbear.j2
+    dest: /etc/config/dropbear
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure Firewall
+  ansible.builtin.template:
+    src: firewall.j2
+    dest: /etc/config/firewall
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure Network
+  ansible.builtin.template:
+    src: network.j2
+    dest: /etc/config/network
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure System
+  ansible.builtin.template:
+    src: system.j2
+    dest: /etc/config/system
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure upnpd
+  ansible.builtin.template:
+    src: upnpd.j2
+    dest: /etc/config/upnpd
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Configure Sysupgrade
+  ansible.builtin.template:
+    src: sysupgrade.j2
+    dest: /etc/config/sysupgrade.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_facts['os_family'] == 'OpenWrt'

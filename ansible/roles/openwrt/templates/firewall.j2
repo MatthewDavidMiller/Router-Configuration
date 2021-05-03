@@ -1,0 +1,24 @@
+config defaults
+    option drop_invalid '1'
+    option input 'DROP'
+    option forward 'DROP'
+    option output 'DROP'
+    option flow_offloading '1'
+    option synflood_protect '1'
+
+config include 'miniupnpd'
+    option type 'script'
+    option path '/usr/share/miniupnpd/firewall.include'
+    option family 'any'
+    option reload '1'
+
+config include
+    option path '/etc/firewall.user'
+
+{{ config_rule }}
+
+{{ config_zone }}
+
+{{ config_redirect }}
+
+{{ config_forwarding }}

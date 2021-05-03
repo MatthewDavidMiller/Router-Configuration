@@ -1,0 +1,9 @@
+config upnpd 'config'
+	option download '1024'
+	option upload '512'
+	option internal_iface 'lan'
+	option port '5000'
+	option upnp_lease_file '/var/run/miniupnpd.leases'
+	option enabled '1'
+
+{{ config_perm_rule }}
