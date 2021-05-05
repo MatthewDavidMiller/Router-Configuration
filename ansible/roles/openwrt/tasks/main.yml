@@ -81,3 +81,13 @@
     group: root
     mode: "0644"
   when: ansible_facts['os_family'] == 'OpenWrt'
+
+- name: Copy ssl cert
+  ansible.builtin.copy:
+    src: "/etc/letsencrypt/live/{{ ssl_cert }}/fullchain.crt"
+    dest: /etc/uhttpd.crt
+
+- name: Copy ssl key
+  ansible.builtin.copy:
+    src: "/etc/letsencrypt/live/{{ ssl_cert }}/privkey.key"
+    dest: /etc/uhttpd.key
