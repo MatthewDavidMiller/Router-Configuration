@@ -3,7 +3,7 @@
 
 ---
 - name: Restrict luci access
-  shell:
+  ansible.builtin.shell:
     cmd: |
       uci set uhttpd.main.listen_http="{{ ip_address }}":80
       uci set uhttpd.main.listen_https="{{ ip_address }}":443
@@ -12,7 +12,7 @@
   when: ansible_facts['os_family'] == 'OpenWrt'
 
 - name: Disable DNS
-  shell:
+  ansible.builtin.shell:
     cmd: |
       uci set dhcp.@dnsmasq[0].port="0"
       uci commit dhcp
